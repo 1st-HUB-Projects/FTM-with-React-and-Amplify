@@ -11,7 +11,7 @@ export const auth = defineAuth({
     },
     familyName: {
       mutable: false,
-      required: true
-    },
+      required: false
+    }
   }
 });
