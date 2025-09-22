@@ -40,18 +40,31 @@ function App() {
     }
   }
 
-  const fetchTables = async () => {
-    try {
-      const tanksData = await fetchTablesApi();
-      setTanks(tanksData);
-      setError(null);
-    } catch (err) {
-      setError('Error calling REST API');
-      console.error('Error calling REST API:', err);
+  // const fetchTables = async () => {
+  //   try {
+  //     const tanksData = await fetchTablesApi();
+  //     setTanks(tanksData);
+  //     setError(null);
+  //   } catch (err) {
+  //     setError('Error calling REST API');
+  //     console.error('Error calling REST API:', err);
+  //   }
+  //   setReload(false);
+  // }
+const fetchTables = async () => {
+  try {
+    const { data: tanksData, errors } = await client.models.Aquarium.list();
+    if (errors) {
+      throw new Error(errors[0].message);  // Handle GraphQL errors (e.g., auth or validation)
     }
-    setReload(false);
+    setTanks(tanksData);  // tanksData is TankExtended[] from AppSync
+    setError(null);
+  } catch (err) {
+    setError('Error calling AppSync');
+    console.error('Error calling AppSync:', err);
   }
-
+  setReload(false);  // Reset flag after fetch
+}
   const addTank = async (tank: Tank) => {
     try {
       const tanksData = await addTankApi(tank);
