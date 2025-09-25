@@ -7,6 +7,7 @@ import config from '../amplify_outputs.json'; // auto-generated
 import { Amplify } from 'aws-amplify';
 import type { Schema } from '../amplify/data/resource.ts';
 import { generateClient } from 'aws-amplify/api';
+import '@aws-amplify/ui-react/styles.css';
 
 Amplify.configure(config);
 
