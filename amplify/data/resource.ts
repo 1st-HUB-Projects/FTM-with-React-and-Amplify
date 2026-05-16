@@ -4,10 +4,10 @@ import { type ClientSchema, a, defineData } from '@aws-amplify/backend';
 const schema = a.schema({
   Order: a
     .model({
-      // We are only defining the fields needed for the chart.
       orderId: a.string().required(),
       customerPhone: a.string(),
       orderDate: a.datetime().required(),
+      // We use valid GraphQL enum values (no spaces)
       status: a.enum([
         'ORDERED',
         'IN_PREPARATION',
@@ -22,9 +22,9 @@ const schema = a.schema({
     .secondaryIndexes(index => [
       index('status').sortKeys(['orderDate']).queryField('ordersByStatus')
     ])
-    // Only signed-in users can read the data.
+    // Only signed-in users can read or create data.
     .authorization(allow => [
-      allow.authenticated().to(['read', 'create', 'update']),
+      allow.authenticated().to(['read', 'create'])
     ]),
 });
 

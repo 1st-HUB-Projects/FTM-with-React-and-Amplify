@@ -1,24 +1,22 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { Authenticator, Button, Heading, useAuthenticator } from '@aws-amplify/ui-react';
-import '@aws-amplify/ui-react/styles.css';
-import { Amplify } from 'aws-amplify';
 import { generateClient } from 'aws-amplify/data';
 import * as Recharts from 'recharts';
 
 // --- Amplify Configuration ---
-// These files connect your frontend to your deployed backend
-import outputs from '../amplify_outputs.json'; 
+// The Schema type is imported from your backend definition
 import { type Schema as BackendSchema } from '../amplify/data/resource'; 
-import './styles.css'; // Optional: for custom dark-theme authenticator
 
-Amplify.configure(outputs);
+// NOTE: The main Amplify.configure() call and style imports are in your main.tsx.
+
 const client = generateClient<BackendSchema>();
 
 // --- Type Alias for Clarity ---
-// We create a specific TypeScript type for an Order based on your schema
+// This creates a specific TypeScript type for an Order based on your schema
 type Order = BackendSchema['Order'];
 
-// --- Main Application Component ---
+// --- Main Application Logic Component ---
+// This component only renders *after* a user has successfully signed in.
 function App() {
     const { signOut } = useAuthenticator();
     const [orders, setOrders] = useState<Order[]>([]);
@@ -28,7 +26,7 @@ function App() {
     useEffect(() => {
         const fetchAllOrders = async () => {
             try {
-                // Fetch all orders using the generated, type-safe client.
+                // This is the live query to your DynamoDB table.
                 const response = await client.models.Order.list();
                 setOrders(response.data);
             } catch (error) {
@@ -39,20 +37,21 @@ function App() {
         };
         fetchAllOrders();
 
-        // Set up a subscription to listen for new orders in real-time.
+        // This sets up a real-time subscription to listen for new orders.
         const sub = client.models.Order.onCreate().subscribe(newOrder => {
+            // When a new order is created, we add it to the top of our list.
             setOrders(prevOrders => [newOrder, ...prevOrders]);
         });
 
-        // Clean up the subscription when the component unmounts.
+        // This cleans up the subscription when the component is unmounted.
         return () => sub.unsubscribe();
     }, []);
 
-    // This useMemo hook processes the raw order data for the chart.
-    // It only recalculates when the 'orders' state changes.
+    // This useMemo hook processes the raw order data specifically for the chart.
+    // It only recalculates when the 'orders' state changes, which is efficient.
     const chartData = useMemo(() => {
         const statusCounts = orders.reduce((acc, order) => {
-            const status = order.status ?? 'unknown';
+            const status = order.status ?? 'UNKNOWN';
             acc[status] = (acc[status] || 0) + 1;
             return acc;
         }, {} as Record<string, number>);
@@ -94,8 +93,8 @@ function App() {
 }
 
 // --- Main Export with Authenticator Wrapper ---
-// This ensures the Authenticator UI is rendered first.
-// The App component will only render *after* a successful sign-in.
+// This is the component that your main.tsx file imports. It handles the
+// entire sign-in and sign-up UI flow.
 export default function AuthenticatedApp() {
   return (
     <Authenticator>

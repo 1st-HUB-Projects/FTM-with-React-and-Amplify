@@ -1,0 +1,40 @@
+/*
+ * This file provides custom CSS overrides for the Amplify Authenticator component.
+ * It uses CSS variables to create a dark theme that matches the application.
+ */
+
+:root {
+  --amplify-colors-background-primary: #1e293b; /* slate-800 */
+  --amplify-colors-background-secondary: #1e293b;
+  --amplify-colors-brand-primary-10: #0284c7; /* sky-600 */
+  --amplify-colors-brand-primary-80: #0ea5e9; /* sky-500 */
+  --amplify-colors-brand-primary-90: #38bdf8; /* sky-400 */
+  --amplify-colors-brand-primary-100: #7dd3fc; /* sky-300 */
+  --amplify-colors-font-primary: #e2e8f0; /* slate-200 */
+  --amplify-colors-font-secondary: #94a3b8; /* slate-400 */
+  --amplify-colors-font-interactive: #e2e8f0;
+  --amplify-colors-font-hover: #ffffff;
+  --amplify-colors-font-focus: #ffffff;
+  --amplify-colors-font-active: #ffffff;
+  --amplify-colors-border-primary: #334155; /* slate-700 */
+  --amplify-colors-border-secondary: #334155;
+  --amplify-colors-border-tertiary: #475569; /* slate-600 */
+  --amplify-colors-border-focus: #38bdf8;
+  --amplify-colors-border-error: #fb7185; /* rose-400 */
+  --amplify-colors-font-error: #fb7185;
+  --amplify-colors-background-error: #881337; /* rose-900 */
+  --amplify-colors-overlay-50: rgba(0, 0, 0, 0.5);
+  --amplify-radii-small: 0.375rem; /* rounded-md */
+  --amplify-radii-medium: 0.5rem; /* rounded-lg */
+  --amplify-radii-large: 0.75rem; /* rounded-xl */
+}
+
+/* Ensure the main container has a dark background */
+[data-amplify-authenticator] {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0f172a; /* slate-900 */
+}
+

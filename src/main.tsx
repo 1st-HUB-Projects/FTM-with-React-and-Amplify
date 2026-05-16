@@ -1,22 +1,27 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
-import { Authenticator } from "@aws-amplify/ui-react";
-import config from '../amplify_outputs.json'; // auto-generated
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { Amplify } from 'aws-amplify';
-import type { Schema } from '../amplify/data/resource.ts';
-import { generateClient } from 'aws-amplify/api';
+import AuthenticatedApp from './App.jsx'; // This imports the default export from App.tsx
+
+// --- Stylesheet Imports ---
+// This is the base styling required by the Amplify UI components. It must come first.
 import '@aws-amplify/ui-react/styles.css';
+// This is your new custom stylesheet for the dark theme.
+import './styles.css'; 
+// This is your global app stylesheet (e.g., for TailwindCSS).
+import './index.css';
 
-Amplify.configure(config);
+// Import the generated backend configuration file.
+import outputs from '../amplify_outputs.json';
 
-export const client = generateClient<Schema>()
+// Configure the Amplify library with your backend resources. This connects the frontend to the cloud.
+Amplify.configure(outputs);
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <Authenticator>
-      <App />
-    </Authenticator>
-  </StrictMode>,
-)
+// This is the main entry point that tells React where to render the application.
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    {/* This renders your App component, which handles the Authenticator UI and the main app logic. */}
+    <AuthenticatedApp />
+  </React.StrictMode>
+);
+
